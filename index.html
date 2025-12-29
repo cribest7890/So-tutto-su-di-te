@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading...</title>
+</head>
+<body>
+  <h1 id="msg">Caricamento...</h1>
+
+  <script>
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("msg").innerText =
+          "So che sei in " + data.country_name + " 😏";
+      })
+      .catch(() => {
+        document.getElementById("msg").innerText =
+          "Non riesco a capire da dove vieni 🤷‍♂️";
+      });
+  </script>
+</body>
+</html>
