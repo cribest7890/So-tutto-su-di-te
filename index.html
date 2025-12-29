@@ -2,22 +2,54 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Loading...</title>
+  <title>Analisi dispositivo...</title>
+  <style>
+    body {
+      background: black;
+      color: #00ff00;
+      font-family: monospace;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1 id="msg">Caricamento...</h1>
 
-  <script>
-    fetch("https://ipapi.co/json/")
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("msg").innerText =
-          "So che sei in " + data.country_name + " 😏";
-      })
-      .catch(() => {
-        document.getElementById("msg").innerText =
-          "Non riesco a capire da dove vieni 🤷‍♂️";
-      });
-  </script>
+<h2>Analizzando il tuo dispositivo...</h2>
+<pre id="output"></pre>
+
+<script>
+const out = document.getElementById("output");
+
+function log(txt) {
+  out.textContent += txt + "\n";
+}
+
+// Browser & OS
+log("Browser: " + navigator.userAgent);
+log("Sistema operativo: " + navigator.platform);
+
+// Lingua
+log("Lingua: " + navigator.language);
+
+// Schermo
+log("Risoluzione: " + screen.width + "x" + screen.height);
+
+// Fuso orario
+log("Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+// Tipo dispositivo
+const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+log("Tipo dispositivo: " + (isMobile ? "Mobile" : "Desktop"));
+
+// Paese (opzionale)
+fetch("https://ipapi.co/json/")
+  .then(r => r.json())
+  .then(d => {
+    log("Paese rilevato: " + d.country_name);
+    log("\nAccesso registrato 😏");
+  })
+  .catch(() => log("Paese: sconosciuto"));
+</script>
+
 </body>
 </html>
