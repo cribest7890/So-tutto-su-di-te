@@ -10,6 +10,12 @@
       font-family: monospace;
       padding: 20px;
     }
+    h2 {
+      color: #00ff00;
+    }
+    pre {
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
@@ -20,35 +26,62 @@
 <script>
 const out = document.getElementById("output");
 
-function log(txt) {
-  out.textContent += txt + "\n";
+function log(text) {
+  out.textContent += text + "\n";
 }
 
-// Browser & OS
-log("Browser: " + navigator.userAgent);
-log("Sistema operativo: " + navigator.platform);
+// ===== FUNZIONI =====
+function getBrowser() {
+  const ua = navigator.userAgent;
+  if (ua.includes("OPR") || ua.includes("Opera")) return "Opera";
+  if (ua.includes("Edg")) return "Edge";
+  if (ua.includes("Chrome")) return "Chrome";
+  if (ua.includes("Firefox")) return "Firefox";
+  if (ua.includes("Safari")) return "Safari";
+  return "Sconosciuto";
+}
 
-// Lingua
-log("Lingua: " + navigator.language);
+function getOS() {
+  const ua = navigator.userAgent;
+  if (/Android/i.test(ua)) return "Android";
+  if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+  if (/Windows/i.test(ua)) return "Windows";
+  if (/Mac/i.test(ua)) return "macOS";
+  if (/Linux/i.test(ua)) return "Linux";
+  return "Sconosciuto";
+}
 
-// Schermo
-log("Risoluzione: " + screen.width + "x" + screen.height);
+function getAndroidVersion() {
+  const match = navigator.userAgent.match(/Android\s([0-9\.]+)/);
+  return match ? match[1] : null;
+}
 
-// Fuso orario
-log("Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone);
+// ===== OUTPUT =====
+setTimeout(() => log("Browser: " + getBrowser()), 500);
+setTimeout(() => log("Sistema operativo: " + getOS()), 1000);
 
-// Tipo dispositivo
+if (getOS() === "Android") {
+  setTimeout(() => log("Versione Android: " + getAndroidVersion()), 1500);
+}
+
+setTimeout(() => log("Lingua: " + navigator.language), 2000);
+setTimeout(() => log("Risoluzione: " + screen.width + "x" + screen.height), 2500);
+setTimeout(() => log("Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone), 3000);
+
 const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-log("Tipo dispositivo: " + (isMobile ? "Mobile" : "Desktop"));
+setTimeout(() => log("Tipo dispositivo: " + (isMobile ? "Mobile" : "Desktop")), 3500);
 
-// Paese (opzionale)
-fetch("https://ipapi.co/json/")
-  .then(r => r.json())
-  .then(d => {
-    log("Paese rilevato: " + d.country_name);
-    log("\nAccesso registrato 😏");
-  })
-  .catch(() => log("Paese: sconosciuto"));
+// ===== PAESE (API esterna) =====
+setTimeout(() => {
+  fetch("https://ipapi.co/json/")
+    .then(r => r.json())
+    .then(d => {
+      log("Paese rilevato: " + d.country_name);
+      log("");
+      log("Accesso registrato 😏");
+    })
+    .catch(() => log("Paese: sconosciuto"));
+}, 4000);
 </script>
 
 </body>
