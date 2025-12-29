@@ -4,26 +4,22 @@
   <meta property="og:image" content="https://i.pinimg.com/originals/c5/9a/d2/c59ad2bd4ad2fbacd04017debc679ddb.gif">
   <meta charset="UTF-8">
   <title>so tutto su di te</title>
+
   <style>
     body {
       margin: 0;
       padding: 20px;
       color: #00ff00;
       font-family: monospace;
-
-      /* GIF MATRIX */
-      background: url("https://i.pinimg.com/originals/c5/9a/d2/c59ad2bd4ad2fbacd04017debc679ddb.gif") no-repeat center center fixed;
+      background: url("https://i.pinimg.com/originals/c5/9a/d2/c59ad2bd4ad2fbacd04017debc679ddb.gif")
+        no-repeat center center fixed;
       background-size: cover;
     }
 
-    /* Overlay scuro per leggere bene */
     body::before {
       content: "";
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: rgba(0, 0, 0, 0.75);
       z-index: -1;
     }
@@ -38,6 +34,7 @@
     }
   </style>
 </head>
+
 <body>
 
 <h2>SO TUTTO SU DI TE by Cribest7890</h2>
@@ -61,23 +58,35 @@ function typeLine(text, delay = 40) {
   });
 }
 
-// INFO PULITE
+/* RICONOSCIMENTO BROWSER COMPLETO */
 function getBrowser() {
+  if (navigator.brave && typeof navigator.brave === "object") return "Brave";
+
   const ua = navigator.userAgent;
+
+  if (ua.includes("TorBrowser")) return "Tor Browser";
+  if (ua.includes("Vivaldi")) return "Vivaldi";
+  if (ua.includes("SamsungBrowser")) return "Samsung Internet";
+  if (ua.includes("UCBrowser")) return "UC Browser";
+  if (ua.includes("YaBrowser")) return "Yandex Browser";
+
   if (ua.includes("OPR")) return "Opera";
   if (ua.includes("Edg")) return "Edge";
-  if (ua.includes("Chrome")) return "Chrome";
   if (ua.includes("Firefox")) return "Firefox";
+  if (ua.includes("Chrome")) return "Chrome";
   if (ua.includes("Safari")) return "Safari";
+
   return "Sconosciuto";
 }
 
+/* SISTEMA OPERATIVO */
 function getOS() {
   const ua = navigator.userAgent;
   if (/Android/i.test(ua)) return "Android";
   if (/iPhone|iPad/i.test(ua)) return "iOS";
   if (/Windows/i.test(ua)) return "Windows";
   if (/Mac/i.test(ua)) return "macOS";
+  if (/Linux/i.test(ua)) return "Linux";
   return "Sconosciuto";
 }
 
@@ -109,7 +118,6 @@ async function start() {
 
   await typeLine("\nAccesso registrato.");
   await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10));
-
   await typeLine("\n--------------------------------");
 }
 
