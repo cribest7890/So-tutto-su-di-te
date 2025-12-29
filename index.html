@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Analisi dispositivo...</title>
+  <title>Security Scan</title>
   <style>
     body {
       background: black;
@@ -10,8 +10,8 @@
       font-family: monospace;
       padding: 20px;
     }
-    h2 {
-      color: #00ff00;
+    .red {
+      color: #ff3333;
     }
     pre {
       white-space: pre-wrap;
@@ -20,20 +20,31 @@
 </head>
 <body>
 
-<h2>Analizzando il tuo dispositivo...</h2>
+<h2>SECURITY SYSTEM v3.9</h2>
 <pre id="output"></pre>
 
 <script>
 const out = document.getElementById("output");
 
-function log(text) {
-  out.textContent += text + "\n";
+function typeLine(text, delay = 40) {
+  return new Promise(resolve => {
+    let i = 0;
+    const interval = setInterval(() => {
+      out.textContent += text[i];
+      i++;
+      if (i >= text.length) {
+        out.textContent += "\n";
+        clearInterval(interval);
+        resolve();
+      }
+    }, delay);
+  });
 }
 
-// ===== FUNZIONI =====
+// INFO PULITE
 function getBrowser() {
   const ua = navigator.userAgent;
-  if (ua.includes("OPR") || ua.includes("Opera")) return "Opera";
+  if (ua.includes("OPR")) return "Opera";
   if (ua.includes("Edg")) return "Edge";
   if (ua.includes("Chrome")) return "Chrome";
   if (ua.includes("Firefox")) return "Firefox";
@@ -44,44 +55,51 @@ function getBrowser() {
 function getOS() {
   const ua = navigator.userAgent;
   if (/Android/i.test(ua)) return "Android";
-  if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+  if (/iPhone|iPad/i.test(ua)) return "iOS";
   if (/Windows/i.test(ua)) return "Windows";
   if (/Mac/i.test(ua)) return "macOS";
-  if (/Linux/i.test(ua)) return "Linux";
   return "Sconosciuto";
 }
 
-function getAndroidVersion() {
-  const match = navigator.userAgent.match(/Android\s([0-9\.]+)/);
-  return match ? match[1] : null;
+async function start() {
+  await typeLine(">> Inizializzazione sistema...");
+  await typeLine(">> Connessione stabilita");
+  await typeLine(">> Avvio scansione dispositivo...\n");
+
+  await typeLine("Browser: " + getBrowser());
+  await typeLine("Sistema operativo: " + getOS());
+  await typeLine("Lingua: " + navigator.language);
+  await typeLine("Risoluzione: " + screen.width + "x" + screen.height);
+  await typeLine("Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  await typeLine("Tipo dispositivo: " + (isMobile ? "Mobile" : "Desktop"));
+
+  await typeLine("\n>> Analisi di sicurezza in corso...");
+  await typeLine(">> Controllo vulnerabilità...");
+  await typeLine(">> Monitoraggio attività...");
+
+  // Paese
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+    await typeLine("\nPosizione approssimativa: " + data.country_name);
+  } catch {
+    await typeLine("\nPosizione: sconosciuta");
+  }
+
+  await typeLine("\n!!! ATTENZIONE !!!", 30);
+  await typeLine("Comportamento anomalo rilevato", 30);
+  await typeLine("Livello di rischio: MEDIO", 30);
+
+  await typeLine("\nAccesso registrato.", 50);
+  await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10), 50);
+
+  await typeLine("\n--------------------------------");
+  
 }
 
-// ===== OUTPUT =====
-setTimeout(() => log("Browser: " + getBrowser()), 500);
-setTimeout(() => log("Sistema operativo: " + getOS()), 1000);
-
-if (getOS() === "Android") {
-  setTimeout(() => log("Versione Android: " + getAndroidVersion()), 1500);
-}
-
-setTimeout(() => log("Lingua: " + navigator.language), 2000);
-setTimeout(() => log("Risoluzione: " + screen.width + "x" + screen.height), 2500);
-setTimeout(() => log("Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone), 3000);
-
-const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-setTimeout(() => log("Tipo dispositivo: " + (isMobile ? "Mobile" : "Desktop")), 3500);
-
-// ===== PAESE (API esterna) =====
-setTimeout(() => {
-  fetch("https://ipapi.co/json/")
-    .then(r => r.json())
-    .then(d => {
-      log("Paese rilevato: " + d.country_name);
-      log("");
-      log("Accesso registrato 😏");
-    })
-    .catch(() => log("Paese: sconosciuto"));
-}, 4000);
+start();
 </script>
 
 </body>
