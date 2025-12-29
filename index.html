@@ -5,16 +5,35 @@
   <title>Security Scan</title>
   <style>
     body {
-      background: black;
+      margin: 0;
+      padding: 20px;
       color: #00ff00;
       font-family: monospace;
-      padding: 20px;
+
+      /* GIF MATRIX */
+      background: url("https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif") no-repeat center center fixed;
+      background-size: cover;
     }
-    .red {
-      color: #ff3333;
+
+    /* Overlay scuro per leggere bene */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: -1;
     }
+
+    h2 {
+      color: #00ff00;
+    }
+
     pre {
       white-space: pre-wrap;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -79,7 +98,6 @@ async function start() {
   await typeLine(">> Controllo vulnerabilità...");
   await typeLine(">> Monitoraggio attività...");
 
-  // Paese
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
@@ -92,11 +110,14 @@ async function start() {
   await typeLine("Comportamento anomalo rilevato", 30);
   await typeLine("Livello di rischio: MEDIO", 30);
 
-  await typeLine("\nAccesso registrato.", 50);
-  await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10), 50);
+  await typeLine("\nAccesso registrato.");
+  await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10));
 
   await typeLine("\n--------------------------------");
-  
+  await typeLine("😄 TRANQUILLO.");
+  await typeLine("È solo uno scherzo.");
+  await typeLine("Nessun dato è stato salvato.");
+  await typeLine("Solo JavaScript + CSS.");
 }
 
 start();
