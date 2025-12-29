@@ -102,14 +102,10 @@ async function start() {
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
-    await typeLine("\nPosizione approssimativa: " + data.country_name);
+    await typeLine("\nPaese: " + data.country_name);
   } catch {
     await typeLine("\nPosizione: sconosciuta");
   }
-
-  await typeLine("\n!!! ATTENZIONE !!!", 30);
-  await typeLine("Comportamento anomalo rilevato", 30);
-  await typeLine("Livello di rischio: MEDIO", 30);
 
   await typeLine("\nAccesso registrato.");
   await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10));
