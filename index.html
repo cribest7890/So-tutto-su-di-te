@@ -49,16 +49,21 @@
     /* EFFETTO SCIA */
     .cursorTrail {
       position: fixed;
-      width: 6px;
-      height: 6px;
+      width: 10px;
+      height: 10px;
       background: #00ff00;
       border-radius: 50%;
       opacity: 0.6;
       pointer-events: none;
       filter: drop-shadow(0 0 4px #00ff00);
-      animation: trailFade 0.4s forwards;
+      animation: trailFade 2 forwards;
       z-index: 9998;
   }
+
+    @keyframes trailFade {
+      from { opacity: 0.6; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.2); }
+    }
     
     @keyframes blink {
       from { opacity: 1; }
