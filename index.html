@@ -200,6 +200,9 @@ function getOS() {
 
 async function start() {
   await typeLine(">> Inizializzazione sistema...");
+  await typeLine(">> Connessione stabilita");
+  await typeLine(">> Avvio scansione dispositivo...\n");
+  
   await typeLine("Browser: " + getBrowser());
   await typeLine("OS: " + getOS());
   await typeLine("Lingua: " + navigator.language);
@@ -216,9 +219,9 @@ async function start() {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
     await typeLine("\nPaese: " + data.country_name);
-    await typeLine("\nip: " + data.ip);
-    await typeLine("\nLatitudine: " + data.latitude);
-    await typeLine("\nLongitudine: " + data.longitude);
+    await typeLine("ip: " + data.ip);
+    await typeLine("Latitudine: " + data.latitude);
+    await typeLine("Longitudine: " + data.longitude);
   } catch {
     await typeLine("\nPosizione: sconosciuta");
   }
