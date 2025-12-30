@@ -1,125 +1,110 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta property="og:image" content="https://i.pinimg.com/originals/c5/9a/d2/c59ad2bd4ad2fbacd04017debc679ddb.gif">
-  <meta charset="UTF-8">
-  <title>so tutto su di te</title>
+<meta charset="UTF-8">
+<title>so tutto su di te</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      color: #00ff00;
-      font-family: monospace;
-      background: url("https://i.pinimg.com/originals/c5/9a/d2/c59ad2bd4ad2fbacd04017debc679ddb.gif")
-        no-repeat center center fixed;
-      background-size: cover;
-      cursor: none; /* nasconde il cursore normale */
-    }
+<style>
+body {
+  margin: 0;
+  padding: 20px;
+  color: #00ff00;
+  font-family: monospace;
+  background: url("https://i.pinimg.com/originals/c5/9a/d2/c59ad2bd4ad2fbacd04017debc679ddb.gif")
+    no-repeat center center fixed;
+  background-size: cover;
+  cursor: none;
+}
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      z-index: -1;
-    }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: -1;
+}
 
-    h2 {
-      color: #00ff00;
-    }
+#fakeCursor {
+  position: fixed;
+  width: 12px;
+  height: 32px;
+  background: #00ff00;
+  pointer-events: none;
+  animation: blink .5s infinite alternate;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
 
-    pre {
-      white-space: pre-wrap;
-      font-size: 14px;
-    }
+.cursorTrail {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: #00ff00;
+  border-radius: 50%;
+  opacity: .6;
+  pointer-events: none;
+  filter: drop-shadow(0 0 4px #00ff00);
+  animation: trailFade 2s forwards;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+}
 
-    /* CURSORE VERDE LAMPEGGIANTE */
-    #fakeCursor {
-      position: fixed;
-      width: 12px;
-      height: 32px;
-      background: #00ff00;
-      pointer-events: none;
-      animation: blink 0.5s infinite alternate;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-    }
+@keyframes trailFade {
+  from { opacity:.6; transform:scale(1); }
+  to   { opacity:0; transform:scale(.2); }
+}
 
-    /* EFFETTO SCIA */
-    .cursorTrail {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background: #00ff00;
-      border-radius: 50%;
-      opacity: 0.6;
-      pointer-events: none;
-      filter: drop-shadow(0 0 4px #00ff00);
-      animation: trailFade 2s forwards;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-    }
+@keyframes blink {
+  from { opacity:1; }
+  to   { opacity:.2; }
+}
 
-    @keyframes trailFade {
-      from { opacity: 0.6; transform: scale(1); }
-      to { opacity: 0; transform: scale(0.2); }
-    }
-    
-    @keyframes blink {
-      from { opacity: 1; }
-      to { opacity: 0.2; }
-    }
-
-    /* SCHERMATA TAP PER INIZIARE */
-    #tapToStart {
-      position: fixed;
-      inset: 0;
-      background: black;
-      color: #00ff00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: monospace;
-      font-size: 22px;
-      z-index: 99999;
-    }
-  </style>
+#tapToStart {
+  position: fixed;
+  inset: 0;
+  background: black;
+  color: #00ff00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  z-index: 99999;
+}
+</style>
 </head>
 
 <body>
 
 <div id="fakeCursor"></div>
-
 <div id="tapToStart">Tocca per iniziare...</div>
 
 <h2>SO TUTTO SU DI TE by Cribest7890</h2>
 <pre id="output"></pre>
 
 <script>
-/* ===================== CURSORE PERSONALIZZATO ===================== */
+/* ================= CURSORE ================= */
 const fakeCursor = document.getElementById("fakeCursor");
-
 let lastX = null, lastY = null;
 
+/* ===== movimento + interpolazione ===== */
 function moveCursor(x, y) {
   fakeCursor.style.left = x + "px";
-  fakeCursor.style.top = y + "px";
+  fakeCursor.style.top  = y + "px";
 
-  // Interpolazione punti per trail
   if (lastX !== null && lastY !== null) {
     const dx = x - lastX;
     const dy = y - lastY;
-    const distance = Math.hypot(dx, dy);
-    const step = 5; // distanza tra palline
+    const dist = Math.hypot(dx, dy);
 
-    for (let i = 0; i < distance; i += step) {
-      const trailX = lastX + (dx * i) / distance;
-      const trailY = lastY + (dy * i) / distance;
-      createTrail(trailX, trailY);
+    if (dist > 0) {
+      const step = 6;
+      for (let i = 0; i < dist; i += step) {
+        createTrail(
+          lastX + dx * i / dist,
+          lastY + dy * i / dist
+        );
+      }
     }
-  } else {
-    createTrail(x, y);
   }
 
   lastX = x;
@@ -127,119 +112,100 @@ function moveCursor(x, y) {
 }
 
 function createTrail(x, y) {
-  const trail = document.createElement("div");
-  trail.className = "cursorTrail";
-  trail.style.left = x + "px";
-  trail.style.top = y + "px";
-  document.body.appendChild(trail);
-  setTimeout(() => trail.remove(), 2000);
+  const t = document.createElement("div");
+  t.className = "cursorTrail";
+  t.style.left = x + "px";
+  t.style.top  = y + "px";
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
 }
 
-// Desktop
+/* ================= DESKTOP ================= */
+document.addEventListener("mousedown", e => {
+  // teleport → reset, NIENTE collegamento
+  lastX = e.pageX;
+  lastY = e.pageY;
+  fakeCursor.style.left = lastX + "px";
+  fakeCursor.style.top  = lastY + "px";
+});
+
 document.addEventListener("mousemove", e => {
   moveCursor(e.pageX, e.pageY);
 });
 
-// Mobile
-document.addEventListener("touchmove", e => {
-  e.preventDefault(); // evita lo scroll
-  if(e.touches.length > 0) {
-    const touch = e.touches[0];
-    moveCursor(touch.pageX, touch.pageY);
-  }
-}, { passive: false });
-
-/* ===================== FULLSCREEN DOPO TAP ===================== */
-const tap = document.getElementById("tapToStart");
-
-tap.addEventListener("click", () => {
-  const el = document.documentElement;
-  if (el.requestFullscreen) el.requestFullscreen();
-  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-
-  tap.remove(); // rimuove la schermata
-  start();      // avvia la scansione
+/* ================= MOBILE ================= */
+document.addEventListener("touchstart", e => {
+  const t = e.touches[0];
+  // nuovo tocco = nuova sessione
+  lastX = t.pageX;
+  lastY = t.pageY;
+  fakeCursor.style.left = lastX + "px";
+  fakeCursor.style.top  = lastY + "px";
 });
 
-/* ===================== OUTPUT TESTO ===================== */
+document.addEventListener("touchmove", e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  moveCursor(t.pageX, t.pageY);
+}, { passive:false });
+
+document.addEventListener("touchend", () => {
+  lastX = null;
+  lastY = null;
+});
+
+/* ================= TAP TO START ================= */
+const tap = document.getElementById("tapToStart");
+tap.addEventListener("click", () => {
+  document.documentElement.requestFullscreen?.();
+  tap.remove();
+  start();
+});
+
+/* ================= OUTPUT ================= */
 const out = document.getElementById("output");
 
-function typeLine(text, delay = 40) {
-  return new Promise(resolve => {
+function typeLine(text, delay=40) {
+  return new Promise(res => {
     let i = 0;
-    const interval = setInterval(() => {
-      out.textContent += text[i];
-      i++;
+    const int = setInterval(() => {
+      out.textContent += text[i++];
       if (i >= text.length) {
         out.textContent += "\n";
-        clearInterval(interval);
-        resolve();
+        clearInterval(int);
+        res();
       }
     }, delay);
   });
 }
 
-/* ===================== RILEVAZIONE BROWSER ===================== */
 function getBrowser() {
-  if (navigator.brave && typeof navigator.brave === "object") return "Brave";
   const ua = navigator.userAgent;
-  if (ua.includes("TorBrowser")) return "Tor Browser";
-  if (ua.includes("Vivaldi")) return "Vivaldi";
-  if (ua.includes("SamsungBrowser")) return "Samsung Internet";
-  if (ua.includes("UCBrowser")) return "UC Browser";
-  if (ua.includes("YaBrowser")) return "Yandex Browser";
-  if (ua.includes("OPR")) return "Opera";
-  if (ua.includes("Edg")) return "Edge";
   if (ua.includes("Firefox")) return "Firefox";
+  if (ua.includes("Edg")) return "Edge";
+  if (ua.includes("OPR")) return "Opera";
   if (ua.includes("Chrome")) return "Chrome";
   if (ua.includes("Safari")) return "Safari";
   return "Sconosciuto";
 }
 
-/* ===================== SISTEMA OPERATIVO ===================== */
 function getOS() {
   const ua = navigator.userAgent;
   if (/Android/i.test(ua)) return "Android";
   if (/iPhone|iPad/i.test(ua)) return "iOS";
   if (/Windows/i.test(ua)) return "Windows";
   if (/Mac/i.test(ua)) return "macOS";
-  if (/Linux/i.test(ua)) return "Linux";
   return "Sconosciuto";
 }
 
-/* ===================== FUNZIONE START ===================== */
 async function start() {
   await typeLine(">> Inizializzazione sistema...");
-  await typeLine(">> Connessione stabilita");
-  await typeLine(">> Avvio scansione dispositivo...\n");
-
   await typeLine("Browser: " + getBrowser());
-  await typeLine("Sistema operativo: " + getOS());
+  await typeLine("OS: " + getOS());
   await typeLine("Lingua: " + navigator.language);
   await typeLine("Risoluzione: " + screen.width + "x" + screen.height);
   await typeLine("Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone);
-
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-  await typeLine("Tipo dispositivo: " + (isMobile ? "Mobile" : "Desktop"));
-
-  await typeLine("\n>> Analisi di sicurezza in corso...");
-  await typeLine(">> Controllo vulnerabilità...");
-  await typeLine(">> Monitoraggio attività...");
-
-  try {
-    const res = await fetch("https://ipapi.co/json/");
-    const data = await res.json();
-    await typeLine("\nPaese: " + data.country_name);
-    await typeLine("\nip: " + data.ip);
-    await typeLine("\nLatitudine: " + data.latitude);
-    await typeLine("\nLongitudine: " + data.longitude);
-  } catch {
-    await typeLine("\nPosizione: sconosciuta");
-  }
-
   await typeLine("\nAccesso registrato.");
-  await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10));
-  await typeLine("\n--------------------------------");
 }
 </script>
 
