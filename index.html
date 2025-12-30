@@ -110,7 +110,11 @@ document.addEventListener("mousemove", e => {
   setTimeout(() => trail.remove(), 2000);
 });
 
-/* FULLSCREEN DOPO TAP */
+document.addEventListener("touchmove", e => {
+  fakeCursor.style.left = touch.pageX + "px";
+  fakeCursor.style.top = touch.pageY + "px";
+});
+  /* FULLSCREEN DOPO TAP */
 const tap = document.getElementById("tapToStart");
 
 tap.addEventListener("click", () => {
