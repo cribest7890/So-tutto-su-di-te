@@ -40,10 +40,10 @@
       width: 12px;
       height: 32px;
       background: #00ff00;
-      border-radius: 0%;
       pointer-events: none;
       animation: blink 0.5s infinite alternate;
       z-index: 9999;
+      transform: translate(-50%, -50%);
     }
 
     /* EFFETTO SCIA */
@@ -56,9 +56,10 @@
       opacity: 0.6;
       pointer-events: none;
       filter: drop-shadow(0 0 4px #00ff00);
-      animation: trailFade 0.4 forwards;
+      animation: trailFade 0.4s forwards;
       z-index: 9998;
-  }
+      transform: translate(-50%, -50%);
+    }
 
     @keyframes trailFade {
       from { opacity: 0.6; transform: scale(1); }
@@ -96,33 +97,41 @@
 <pre id="output"></pre>
 
 <script>
-/* CURSORE PERSONALIZZATO */
+/* ===================== CURSORE PERSONALIZZATO ===================== */
 const fakeCursor = document.getElementById("fakeCursor");
-document.addEventListener("mousemove", e => {
-  fakeCursor.style.left = e.pageX + "px";
-  fakeCursor.style.top = e.pageY + "px";
 
-document.addEventListener("touchmove", e => {
-  e.preventDefault(); // evita lo scroll durante il movimento
-  const touch = e.touches[0]; // primo dito
-  moveCursor(touch.pageX, touch.pageY);
-}, { passive: false }); // necessario per permettere preventDefault su mobile
-  
+function moveCursor(x, y) {
+  fakeCursor.style.left = x + "px";
+  fakeCursor.style.top = y + "px";
+
+  // Creazione scia
   const trail = document.createElement("div");
   trail.className = "cursorTrail";
-  trail.style.left = e.pageX + "px";
-  trail.style.top = e.pageY + "px";
+  trail.style.left = x + "px";
+  trail.style.top = y + "px";
   document.body.appendChild(trail);
   setTimeout(() => trail.remove(), 2000);
+}
+
+// Desktop
+document.addEventListener("mousemove", e => {
+  moveCursor(e.pageX, e.pageY);
 });
 
+// Mobile
+document.addEventListener("touchmove", e => {
+  e.preventDefault(); // evita lo scroll durante il movimento
+  if(e.touches.length > 0) {
+    const touch = e.touches[0];
+    moveCursor(touch.pageX, touch.pageY);
+  }
+}, { passive: false });
 
-  /* FULLSCREEN DOPO TAP */
+/* ===================== FULLSCREEN DOPO TAP ===================== */
 const tap = document.getElementById("tapToStart");
 
 tap.addEventListener("click", () => {
   const el = document.documentElement;
-
   if (el.requestFullscreen) el.requestFullscreen();
   else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
 
@@ -130,6 +139,7 @@ tap.addEventListener("click", () => {
   start();      // avvia la scansione
 });
 
+/* ===================== OUTPUT TESTO ===================== */
 const out = document.getElementById("output");
 
 function typeLine(text, delay = 40) {
@@ -147,28 +157,24 @@ function typeLine(text, delay = 40) {
   });
 }
 
-/* RICONOSCIMENTO BROWSER COMPLETO */
+/* ===================== RILEVAZIONE BROWSER ===================== */
 function getBrowser() {
   if (navigator.brave && typeof navigator.brave === "object") return "Brave";
-
   const ua = navigator.userAgent;
-
   if (ua.includes("TorBrowser")) return "Tor Browser";
   if (ua.includes("Vivaldi")) return "Vivaldi";
   if (ua.includes("SamsungBrowser")) return "Samsung Internet";
   if (ua.includes("UCBrowser")) return "UC Browser";
   if (ua.includes("YaBrowser")) return "Yandex Browser";
-
   if (ua.includes("OPR")) return "Opera";
   if (ua.includes("Edg")) return "Edge";
   if (ua.includes("Firefox")) return "Firefox";
   if (ua.includes("Chrome")) return "Chrome";
   if (ua.includes("Safari")) return "Safari";
-
   return "Sconosciuto";
 }
 
-/* SISTEMA OPERATIVO */
+/* ===================== SISTEMA OPERATIVO ===================== */
 function getOS() {
   const ua = navigator.userAgent;
   if (/Android/i.test(ua)) return "Android";
@@ -179,6 +185,7 @@ function getOS() {
   return "Sconosciuto";
 }
 
+/* ===================== FUNZIONE START ===================== */
 async function start() {
   await typeLine(">> Inizializzazione sistema...");
   await typeLine(">> Connessione stabilita");
