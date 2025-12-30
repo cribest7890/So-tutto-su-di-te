@@ -116,6 +116,12 @@ async function start() {
     await typeLine("\nPosizione: sconosciuta");
   }
 
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+    await typeLine("\nip: " + data.ip);
+  }
+  
   await typeLine("\nAccesso registrato.");
   await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10));
   await typeLine("\n--------------------------------");
