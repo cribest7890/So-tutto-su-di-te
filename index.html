@@ -102,6 +102,12 @@ document.addEventListener("mousemove", e => {
   fakeCursor.style.left = e.pageX + "px";
   fakeCursor.style.top = e.pageY + "px";
 
+document.addEventListener("touchmove", e => {
+  e.preventDefault(); // evita lo scroll durante il movimento
+  const touch = e.touches[0]; // primo dito
+  moveCursor(touch.pageX, touch.pageY);
+}, { passive: false }); // necessario per permettere preventDefault su mobile
+  
   const trail = document.createElement("div");
   trail.className = "cursorTrail";
   trail.style.left = e.pageX + "px";
@@ -110,10 +116,7 @@ document.addEventListener("mousemove", e => {
   setTimeout(() => trail.remove(), 2000);
 });
 
-document.addEventListener("touchmove", e => {
-  fakeCursor.style.left = touch.pageX + "px";
-  fakeCursor.style.top = touch.pageY + "px";
-});
+
   /* FULLSCREEN DOPO TAP */
 const tap = document.getElementById("tapToStart");
 
