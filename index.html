@@ -100,11 +100,33 @@
 /* ===================== CURSORE PERSONALIZZATO ===================== */
 const fakeCursor = document.getElementById("fakeCursor");
 
+let lastX = null, lastY = null;
+
 function moveCursor(x, y) {
   fakeCursor.style.left = x + "px";
   fakeCursor.style.top = y + "px";
 
-  // Creazione scia
+  // Interpolazione punti per trail
+  if (lastX !== null && lastY !== null) {
+    const dx = x - lastX;
+    const dy = y - lastY;
+    const distance = Math.hypot(dx, dy);
+    const step = 5; // distanza tra palline
+
+    for (let i = 0; i < distance; i += step) {
+      const trailX = lastX + (dx * i) / distance;
+      const trailY = lastY + (dy * i) / distance;
+      createTrail(trailX, trailY);
+    }
+  } else {
+    createTrail(x, y);
+  }
+
+  lastX = x;
+  lastY = y;
+}
+
+function createTrail(x, y) {
   const trail = document.createElement("div");
   trail.className = "cursorTrail";
   trail.style.left = x + "px";
@@ -120,7 +142,7 @@ document.addEventListener("mousemove", e => {
 
 // Mobile
 document.addEventListener("touchmove", e => {
-  e.preventDefault(); // evita lo scroll durante il movimento
+  e.preventDefault(); // evita lo scroll
   if(e.touches.length > 0) {
     const touch = e.touches[0];
     moveCursor(touch.pageX, touch.pageY);
