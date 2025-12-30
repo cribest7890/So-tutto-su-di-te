@@ -14,6 +14,7 @@
       background: url("https://i.pinimg.com/originals/c5/9a/d2/c59ad2bd4ad2fbacd04017debc679ddb.gif")
         no-repeat center center fixed;
       background-size: cover;
+      cursor: none; /* nasconde il cursore normale */
     }
 
     body::before {
@@ -32,15 +33,50 @@
       white-space: pre-wrap;
       font-size: 14px;
     }
+
+    /* CURSORE VERDE LAMPEGGIANTE */
+    #fakeCursor {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: #00ff00;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: blink 0.5s infinite alternate;
+      z-index: 9999;
+    }
+
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0.2; }
+    }
   </style>
 </head>
 
 <body>
 
+<div id="fakeCursor"></div>
+
 <h2>SO TUTTO SU DI TE by Cribest7890</h2>
 <pre id="output"></pre>
 
 <script>
+/* CURSORE PERSONALIZZATO */
+const fakeCursor = document.getElementById("fakeCursor");
+document.addEventListener("mousemove", e => {
+  fakeCursor.style.left = e.pageX + "px";
+  fakeCursor.style.top = e.pageY + "px";
+});
+
+/* FULLSCREEN AUTOMATICO */
+function goFullscreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
+goFullscreen();
+
 const out = document.getElementById("output");
 
 function typeLine(text, delay = 40) {
@@ -118,6 +154,7 @@ async function start() {
   } catch {
     await typeLine("\nPosizione: sconosciuta");
   }
+
   await typeLine("\nAccesso registrato.");
   await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10));
   await typeLine("\n--------------------------------");
