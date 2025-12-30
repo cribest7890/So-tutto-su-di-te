@@ -205,7 +205,27 @@ async function start() {
   await typeLine("Lingua: " + navigator.language);
   await typeLine("Risoluzione: " + screen.width + "x" + screen.height);
   await typeLine("Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  await typeLine("Tipo dispositivo: " + (isMobile ? "Mobile" : "Desktop"));
+
+  await typeLine("\n>> Analisi di sicurezza in corso...");
+  await typeLine(">> Controllo vulnerabilità...");
+  await typeLine(">> Monitoraggio attività...");
+
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+    await typeLine("\nPaese: " + data.country_name);
+    await typeLine("\nip: " + data.ip);
+    await typeLine("\nLatitudine: " + data.latitude);
+    await typeLine("\nLongitudine: " + data.longitude);
+  } catch {
+    await typeLine("\nPosizione: sconosciuta");
+  }
+
   await typeLine("\nAccesso registrato.");
+  await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10));
+  await typeLine("\n--------------------------------");
 }
 </script>
 
