@@ -113,6 +113,8 @@ async function start() {
     const data = await res.json();
     await typeLine("\nPaese: " + data.country_name);
     await typeLine("\nip: " + data.ip);
+    await typeLine("\nLatitudine: " + data.latitude);
+    await typeLine("\nLongitudine: " + data.longitude);
   } catch {
     await typeLine("\nPosizione: sconosciuta");
   }
