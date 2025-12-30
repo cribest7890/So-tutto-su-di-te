@@ -50,12 +50,28 @@
       from { opacity: 1; }
       to { opacity: 0.2; }
     }
+
+    /* SCHERMATA TAP PER INIZIARE */
+    #tapToStart {
+      position: fixed;
+      inset: 0;
+      background: black;
+      color: #00ff00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: monospace;
+      font-size: 22px;
+      z-index: 99999;
+    }
   </style>
 </head>
 
 <body>
 
 <div id="fakeCursor"></div>
+
+<div id="tapToStart">Tocca per iniziare la scansione...</div>
 
 <h2>SO TUTTO SU DI TE by Cribest7890</h2>
 <pre id="output"></pre>
@@ -68,14 +84,18 @@ document.addEventListener("mousemove", e => {
   fakeCursor.style.top = e.pageY + "px";
 });
 
-/* FULLSCREEN AUTOMATICO */
-function goFullscreen() {
+/* FULLSCREEN DOPO TAP */
+const tap = document.getElementById("tapToStart");
+
+tap.addEventListener("click", () => {
   const el = document.documentElement;
+
   if (el.requestFullscreen) el.requestFullscreen();
   else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-  else if (el.msRequestFullscreen) el.msRequestFullscreen();
-}
-goFullscreen();
+
+  tap.remove(); // rimuove la schermata
+  start();      // avvia la scansione
+});
 
 const out = document.getElementById("output");
 
@@ -159,8 +179,6 @@ async function start() {
   await typeLine("ID sessione: " + Math.random().toString(36).substring(2, 10));
   await typeLine("\n--------------------------------");
 }
-
-start();
 </script>
 
 </body>
