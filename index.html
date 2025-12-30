@@ -46,6 +46,20 @@
       z-index: 9999;
     }
 
+    /* EFFETTO SCIA */
+    .cursorTrail {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: #00ff00;
+      border-radius: 50%;
+      opacity: 0.6;
+      pointer-events: none;
+      filter: drop-shadow(0 0 4px #00ff00);
+      animation: trailFade 0.4s forwards;
+      z-index: 9998;
+  }
+    
     @keyframes blink {
       from { opacity: 1; }
       to { opacity: 0.2; }
@@ -82,6 +96,12 @@ const fakeCursor = document.getElementById("fakeCursor");
 document.addEventListener("mousemove", e => {
   fakeCursor.style.left = e.pageX + "px";
   fakeCursor.style.top = e.pageY + "px";
+
+  const trail = document.createElement("div");
+  trail.className = "cursorTrail";
+  trail.style.left = e.pageX + "px";
+  trail.style.top = e.pageY + "px";
+  document.body.appendChild(trail);
 });
 
 /* FULLSCREEN DOPO TAP */
